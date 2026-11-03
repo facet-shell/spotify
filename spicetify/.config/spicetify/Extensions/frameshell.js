@@ -39,12 +39,21 @@
         return { kind, uri, title: title ?? "", subtitle: subtitle ?? "", image: image ?? "", length: length ?? 0 };
     }
 
+    // The client names pictures as spotify: links; the shell needs a web address. A mosaic is
+    // the four-cover tile Spotify makes for your own playlists without a picture of their own.
+    function imageUrl(url) {
+        if (!url) return "";
+        if (url.startsWith("spotify:image:")) return "https://i.scdn.co/image/" + url.slice("spotify:image:".length);
+        if (url.startsWith("spotify:mosaic:")) return "https://mosaic.scdn.co/300/" + url.slice("spotify:mosaic:".length).split(":").join("");
+        return url;
+    }
+
     // The smallest picture that is still large enough for a launcher row
     function pickImage(sources) {
         const list = (sources ?? []).filter(s => s?.url);
         if (list.length === 0) return "";
         const fitting = list.filter(s => !s.width || s.width >= 64).sort((a, b) => (a.width ?? 0) - (b.width ?? 0));
-        return (fitting[0] ?? list[0]).url;
+        return imageUrl((fitting[0] ?? list[0]).url);
     }
 
     function names(artists) {
@@ -119,6 +128,20 @@
         return out;
     }
 
+    // The rootlist often leaves a playlist's picture out (or only gives a spotify: link); the
+    // playlist's own metadata has it
+    async function playlistImage(p) {
+        const direct = pickImage(p.images);
+        if (direct) return direct;
+        try {
+            const meta = await Spicetify.Platform.PlaylistAPI.getMetadata(p.uri);
+            return pickImage(meta?.images);
+        } catch (e) {
+            log("playlist image", e);
+            return "";
+        }
+    }
+
     // Your own playlists, straight from the client (no network request)
     async function libraryPlaylists(query) {
         try {
@@ -131,8 +154,8 @@
                 }
             })(root?.items);
             const q = query.toLowerCase();
-            return flat.filter(p => (p.name ?? "").toLowerCase().includes(q)).slice(0, 4)
-                .map(p => item("playlist", p.uri, p.name, "your playlist", p.images?.[0]?.url ?? ""));
+            const mine = flat.filter(p => (p.name ?? "").toLowerCase().includes(q)).slice(0, 4);
+            return await Promise.all(mine.map(async p => item("playlist", p.uri, p.name, "your playlist", await playlistImage(p))));
         } catch (e) {
             log("library", e);
             return [];
