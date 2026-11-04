@@ -1,0 +1,283 @@
+/*
+ * facet bloom – Spicetify theme, bloom style
+ * Same look as the bloom shell and the other bloom app themes: Rubik, round panels on
+ * the surface tone with gaps in the darkest tone, pills for what is picked, the theme's
+ * accent for play buttons and progress. Colors come from color.ini (--spice-*), which
+ * `facet theme` writes from the Material You tones.
+ *
+ * Selectors: Spotify renames its classes regularly. If something stops working after
+ * an update, run `spicetify enable-devtools`, press Ctrl+Shift+I in Spotify and adjust
+ * the class here.
+ */
+
+/* ── Base values ────────────────────────────────────────────── */
+
+:root {
+  --fb-font: "Rubik", ui-sans-serif, system-ui, sans-serif;
+  --fb-radius: 18px;
+  --fb-radius-sm: 12px;
+
+  --encore-body-font-stack: var(--fb-font);
+  --encore-title-font-stack: var(--fb-font);
+  --encore-variable-font-stack: var(--fb-font);
+}
+
+body,
+input,
+button,
+.encore-text {
+  font-family: var(--fb-font) !important;
+}
+
+/* Map Spotify's own color variables (encore) to the theme colors (color.ini) so
+   places without --spice-* match too (green → the accent etc.). */
+:root,
+.encore-dark-theme,
+.encore-dark-theme .encore-base-set {
+  --background-base: var(--spice-main);
+  --background-highlight: var(--spice-highlight);
+  --background-press: var(--spice-main-elevated);
+  --background-elevated-base: var(--spice-main-elevated);
+  --background-elevated-highlight: var(--spice-highlight);
+  --background-elevated-press: var(--spice-main-elevated);
+  --background-tinted-base: rgba(var(--spice-rgb-text), 0.06);
+  --background-tinted-highlight: rgba(var(--spice-rgb-text), 0.1);
+  --background-tinted-press: rgba(var(--spice-rgb-text), 0.04);
+  --text-base: var(--spice-text);
+  --text-subdued: var(--spice-subtext);
+  --text-bright-accent: var(--spice-button);
+  --text-negative: var(--spice-notification-error);
+  --text-announcement: var(--spice-button-active);
+  --essential-base: var(--spice-text);
+  --essential-subdued: var(--spice-misc);
+  --essential-bright-accent: var(--spice-button);
+  --essential-negative: var(--spice-notification-error);
+  --decorative-base: var(--spice-text);
+  --decorative-subdued: var(--spice-highlight);
+}
+
+/* Accent buttons (play on albums, follow …): the accent with its own text color */
+.encore-bright-accent-set,
+.encore-dark-theme .encore-bright-accent-set {
+  --background-base: var(--spice-button);
+  --background-highlight: var(--spice-button-active);
+  --background-press: var(--spice-button);
+  --text-base: var(--spice-on-button);
+  --essential-base: var(--spice-on-button);
+}
+
+/* ── Round panels with gaps ─────────────────────────────────── */
+
+.Root__top-container {
+  --panel-gap: 8px;
+  background-color: var(--spice-sidebar) !important;
+}
+
+.Root__nav-bar,
+.Root__main-view,
+.Root__right-sidebar,
+.Root__now-playing-bar {
+  border-radius: var(--fb-radius) !important;
+  overflow: hidden !important;
+  background-color: var(--spice-main) !important;
+  border: none !important;
+}
+
+/* Inner backgrounds would cover the panel color */
+.Root__main-view > div,
+.Root__right-sidebar > div,
+.main-view-container,
+.main-yourLibraryX-library {
+  background-color: transparent !important;
+}
+
+/* Top bar (home, search): the search is a pill */
+.Root__globalNav {
+  background-color: transparent !important;
+}
+
+.Root__globalNav input {
+  background-color: var(--spice-main) !important;
+  border: none !important;
+  border-radius: 999px !important;
+}
+
+.Root__globalNav input:focus {
+  outline: 2px solid var(--spice-button) !important;
+  outline-offset: -2px;
+}
+
+/* ── Left rail (library) ────────────────────────────────────── */
+
+.main-yourLibraryX-listItem > div {
+  border-radius: 14px !important;
+}
+
+.main-yourLibraryX-listItem:hover > div {
+  background-color: rgba(var(--spice-rgb-text), 0.06) !important;
+}
+
+/* The open playlist is filled, like a picked item in bloom */
+.main-yourLibraryX-listItem[aria-selected="true"] > div {
+  background-color: var(--spice-main-elevated) !important;
+}
+
+/* Covers in the library are soft squares */
+.main-yourLibraryX-listItem img,
+.main-yourLibraryX-listItem .main-image-image {
+  border-radius: var(--fb-radius-sm) !important;
+}
+
+/* ── Tiles (albums, playlists) ──────────────────────────────── */
+
+.main-card-card {
+  border-radius: var(--fb-radius) !important;
+  background-color: transparent !important;
+  transition: background-color 0.2s ease;
+}
+
+.main-card-card:hover {
+  background-color: var(--spice-main-elevated) !important;
+}
+
+.main-card-card img,
+.main-card-card .main-image-image,
+.main-cardImage-imageWrapper {
+  border-radius: 14px !important;
+}
+
+/* Artists stay round */
+.main-cardImage-circular,
+.main-cardImage-circular img {
+  border-radius: 50% !important;
+}
+
+.main-cardHeader-text {
+  font-weight: 500 !important;
+}
+
+/* The big cover on playlist and album pages */
+.main-entityHeader-image,
+.main-entityHeader-imagePlaceholder {
+  border-radius: 26px !important;
+}
+
+/* Filter chips (Playlists, Artists …) as pills, the picked one filled */
+.Root__main-view [role="checkbox"],
+.Root__nav-bar [role="checkbox"] {
+  border-radius: 999px !important;
+  background-color: var(--spice-main-elevated) !important;
+  border: none !important;
+}
+
+.Root__main-view [role="checkbox"][aria-checked="true"],
+.Root__nav-bar [role="checkbox"][aria-checked="true"] {
+  background-color: var(--spice-pill) !important;
+  color: var(--spice-text) !important;
+}
+
+/* The big play button on playlist and album pages: a rounded square like the mockup's */
+.main-actionBar-ActionBarRow [data-testid="play-button"],
+.main-actionBar-ActionBarRow [data-testid="play-button"] > span {
+  border-radius: 18px !important;
+}
+
+/* ── Track lists (playlists, albums, queue) ─────────────────── */
+
+.main-trackList-trackListHeaderRow {
+  color: var(--spice-subtext) !important;
+  border-bottom: none !important;
+}
+
+.main-trackList-trackListRow {
+  border-radius: 14px !important;
+}
+
+.main-trackList-trackListRow:hover {
+  background-color: rgba(var(--spice-rgb-text), 0.06) !important;
+}
+
+/* The picked or playing row is the pill */
+.main-trackList-trackListRow[aria-selected="true"],
+.main-trackList-trackListRow.main-trackList-active {
+  background-color: var(--spice-pill) !important;
+}
+
+.main-trackList-trackListRow img {
+  border-radius: 8px !important;
+}
+
+/* ── Player bar ─────────────────────────────────────────────── */
+
+.Root__now-playing-bar footer,
+[data-testid="now-playing-bar"] {
+  background-color: transparent !important;
+}
+
+.Root__now-playing-bar img,
+.main-nowPlayingWidget-coverArt img {
+  border-radius: var(--fb-radius-sm) !important;
+}
+
+/* Play/pause stays the round light button Spotify draws (encore inverted set) */
+.Root__now-playing-bar .encore-inverted-light-set {
+  --background-base: var(--spice-text);
+  --background-highlight: var(--spice-text);
+  --background-press: var(--spice-subtext);
+  --text-base: var(--spice-main);
+  --essential-base: var(--spice-main);
+}
+
+/* Progress and volume: a thick round line in the accent */
+.progress-bar {
+  --fg-color: var(--spice-button) !important;
+  --bg-color: var(--spice-highlight) !important;
+  --progress-bar-height: 4px;
+  --progress-bar-radius: 4px;
+}
+
+.progress-bar:hover {
+  --fg-color: var(--spice-button-active) !important;
+}
+
+/* ── Menus and popups ───────────────────────────────────────── */
+
+[role="menu"],
+.main-contextMenu-menu {
+  background-color: var(--spice-main-elevated) !important;
+  border: none !important;
+  border-radius: var(--fb-radius) !important;
+  padding: 6px !important;
+}
+
+[role="dialog"] {
+  background-color: var(--spice-main-elevated) !important;
+  border-radius: 24px !important;
+}
+
+[role="menuitem"],
+[role="menuitemradio"],
+[role="menuitemcheckbox"] {
+  border-radius: 12px !important;
+}
+
+[role="menuitem"]:hover,
+[role="menuitemradio"]:hover,
+[role="menuitemcheckbox"]:hover {
+  background-color: var(--spice-pill) !important;
+}
+
+/* ── Odds and ends ──────────────────────────────────────────── */
+
+.os-scrollbar-handle {
+  background: var(--spice-highlight) !important;
+  border-radius: 999px !important;
+}
+
+.os-scrollbar-handle:hover {
+  background: var(--spice-highlight-elevated) !important;
+}
+
+::selection {
+  background-color: rgba(var(--spice-rgb-button), 0.35);
+}
