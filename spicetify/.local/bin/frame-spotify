@@ -62,7 +62,7 @@ store_tokens() {
 }
 
 token() {
-  [[ -f "$STATE" ]] || die "not logged in, run: frame spotify login"
+  [[ -f "$STATE" ]] || die "not logged in, run: facet spotify login"
   local expires now
   expires=$(state expires_at)
   now=$(date +%s)
@@ -73,7 +73,7 @@ token() {
   local client_id refresh response
   client_id=$(state client_id)
   refresh=$(state refresh_token)
-  [[ -n "$refresh" ]] || die "no refresh token, run: frame spotify login"
+  [[ -n "$refresh" ]] || die "no refresh token, run: facet spotify login"
   response=$(curl -sS -X POST https://accounts.spotify.com/api/token \
     --data-urlencode grant_type=refresh_token \
     --data-urlencode "refresh_token=$refresh" \
@@ -146,7 +146,7 @@ cmd_status() {
     [[ -f "$STATE" && -n "$(state refresh_token)" ]]
     return
   fi
-  [[ -f "$STATE" ]] || { echo "not logged in (frame spotify login)"; return 1; }
+  [[ -f "$STATE" ]] || { echo "not logged in (facet spotify login)"; return 1; }
   need curl jq
   local me
   me=$(api GET /me)
@@ -172,7 +172,7 @@ api() {
   [[ "$out" == "$code" ]] && out=""
   case "$code" in
     2??) printf '%s' "$out" ;;
-    401) die "token rejected, run: frame spotify login" ;;
+    401) die "token rejected, run: facet spotify login" ;;
     403) die "not allowed: $(jq -r '.error.message // empty' <<<"$out" 2>/dev/null) (playback control needs Premium)" ;;
     404) die "$(jq -r '.error.message // "not found"' <<<"$out" 2>/dev/null || echo "not found")" ;;
     429) die "too many requests, try again in a moment" ;;

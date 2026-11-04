@@ -25,10 +25,10 @@
 
     const log = (...args) => console.log("[frameshell]", ...args);
 
-    // Written by `frame install spicetify` into frameshell-token.js, which Spotify loads
+    // Written by `facet install spicetify` into frameshell-token.js, which Spotify loads
     // as a second extension; the shell only talks to a client that knows it
     for (let tries = 0; !globalThis.FRAMESHELL_TOKEN; tries++) {
-        if (tries === 20) log("no token yet, run: frame install spicetify");
+        if (tries === 20) log("no token yet, run: facet install spicetify");
         await new Promise(resolve => setTimeout(resolve, 500));
     }
 
