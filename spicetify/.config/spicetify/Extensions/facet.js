@@ -1,11 +1,11 @@
-// frameshell – Spicetify extension that lets the launcher search and control Spotify.
+// facet – Spicetify extension that lets the launcher search and control Spotify.
 //
 // It connects to the Quickshell shell over a local WebSocket (services/Spotify.qml) and
 // answers requests there. Searching uses the client's own quick search (the same one as
 // Ctrl+K in Spotify) plus your library, so no Spotify developer app is needed; if that
 // internal search changes, it falls back to the Web API with the client's own login.
 //
-// After a hello with the token from frameshell-token.js, the shell sends
+// After a hello with the token from facet-token.js, the shell sends
 // Requests:{ id, cmd: "search", query } | { id, cmd: "play", uri, queue }
 //                          | { id, cmd: "control", action, seconds }
 // Answers:                  { id, ok: true, data } | { id, ok: false, error }
@@ -13,7 +13,7 @@
 // Not tested yet (waits for the move to Linux). Spotify's internal names change now and
 // then; the search tries several and logs to the DevTools console (spicetify enable-devtools).
 
-(async function frameshell() {
+(async function facet() {
     // Must match spotifyPort in quickshell/.config/quickshell/config/Config.qml
     const PORT = 48931;
     const RETRY_MS = 3000;
@@ -23,11 +23,11 @@
         await new Promise(resolve => setTimeout(resolve, 300));
     }
 
-    const log = (...args) => console.log("[frameshell]", ...args);
+    const log = (...args) => console.log("[facet]", ...args);
 
-    // Written by `facet install spicetify` into frameshell-token.js, which Spotify loads
+    // Written by `facet install spicetify` into facet-token.js, which Spotify loads
     // as a second extension; the shell only talks to a client that knows it
-    for (let tries = 0; !globalThis.FRAMESHELL_TOKEN; tries++) {
+    for (let tries = 0; !globalThis.FACET_TOKEN; tries++) {
         if (tries === 20) log("no token yet, run: facet install spicetify");
         await new Promise(resolve => setTimeout(resolve, 500));
     }
@@ -279,14 +279,14 @@
             socket = new WebSocket(`ws://127.0.0.1:${PORT}`);
         } catch (e) {
             // A blocked connection (content security policy) throws here; then only the
-            // Web API path in frame-spotify works, see docs/spotify.md
+            // Web API path in facet-spotify works, see docs/spotify.md
             log("cannot open the socket", e);
             setTimeout(connect, RETRY_MS * 10);
             return;
         }
         socket.onopen = () => {
             log("connected to the shell");
-            socket.send(JSON.stringify({ hello: "frameshell", version: 1, token: globalThis.FRAMESHELL_TOKEN }));
+            socket.send(JSON.stringify({ hello: "facet", version: 1, token: globalThis.FACET_TOKEN }));
         };
         socket.onmessage = event => handle(socket, event.data);
         socket.onclose = () => setTimeout(connect, RETRY_MS);

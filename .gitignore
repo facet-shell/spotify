@@ -1,4 +1,4 @@
 # Written by `facet theme` from templates/ for the active style and theme, or by
 # `facet install spicetify` (the token); kept out of git.
-/spicetify/.config/spicetify/Extensions/frameshell-token.js
+/spicetify/.config/spicetify/Extensions/facet-token.js
 /spicetify/.config/spicetify/Themes/*/color.ini

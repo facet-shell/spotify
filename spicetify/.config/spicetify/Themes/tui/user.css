@@ -1,5 +1,5 @@
 /*
- * frameshell – Spicetify theme, TUI style
+ * facet – Spicetify theme, TUI style
  * Same look as the Vencord theme (system24) and the terminal: monospace,
  * square corners, panels drawn as 1px frames with a label in the top line
  * (lib, home, queue, player). Colors come from color.ini (--spice-*).
@@ -13,7 +13,7 @@
 
 :root {
   --fs-font: "JetBrains Mono", monospace;
-  --fs-frame: var(--spice-highlight);
+  --fs-facet: var(--spice-highlight);
   --fs-label: var(--spice-button);
 
   --encore-body-font-stack: var(--fs-font);
