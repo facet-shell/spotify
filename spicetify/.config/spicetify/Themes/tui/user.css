@@ -13,7 +13,7 @@
 
 :root {
   --fs-font: "JetBrains Mono", monospace;
-  --fs-facet: var(--spice-highlight);
+  --fs-frame: var(--spice-highlight);
   --fs-label: var(--spice-button);
 
   --encore-body-font-stack: var(--fs-font);
